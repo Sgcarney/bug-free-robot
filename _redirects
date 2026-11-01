@@ -4,7 +4,8 @@
 /subscribe                             https://sgcarney.substack.com/subscribe 301
 /books                                 /#books                 301
 /cover-gallery                         /#books                 301
-/article                               /articles               301
+/article                               /blog/#magazines        301
+/articles                              /blog/#magazines        301
 /the-wedge-1                           /the-wedge              301
 /wedge-links                           /the-wedge              301
 /training                              /the-wedge              301
