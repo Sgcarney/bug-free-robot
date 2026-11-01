@@ -20,6 +20,5 @@
 /press-kit                             /press                  301
 /blog/get-your-signed-copy-of-the-wedge /the-wedge             301
 # Squarespace feeds and category pages
-/blog?format=rss                       https://sgcarney.substack.com/feed 301
 /blog/category/*                       /blog                   301
 /blog/tag/*                            /blog                   301
