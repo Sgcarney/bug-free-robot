@@ -1,0 +1,25 @@
+# Old Squarespace addresses that no longer have their own page
+/home                                  /                       301
+/contact                               /#contact               301
+/subscribe                             https://sgcarney.substack.com/subscribe 301
+/books                                 /#books                 301
+/cover-gallery                         /#books                 301
+/article                               /articles               301
+/the-wedge-1                           /the-wedge              301
+/wedge-links                           /the-wedge              301
+/training                              /the-wedge              301
+/dreamol                               /dream                  301
+/new-speaking-page                     /public-speaking        301
+/podcast                               /#videos                301
+/podcast-12                            /#videos                301
+/podcast-23                            /#videos                301
+/courses                               /                       301
+/style-sheet                           /                       301
+/title-mobile                          /                       301
+/pokeybear                             /about                  301
+/press-kit                             /press                  301
+/blog/get-your-signed-copy-of-the-wedge /the-wedge             301
+# Squarespace feeds and category pages
+/blog?format=rss                       https://sgcarney.substack.com/feed 301
+/blog/category/*                       /blog                   301
+/blog/tag/*                            /blog                   301
