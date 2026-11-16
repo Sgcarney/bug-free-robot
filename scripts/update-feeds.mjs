@@ -97,7 +97,7 @@ ${items}
 function swap(html, key, body) {
   const re = new RegExp(`(<!-- AUTO:${key}:START -->)[\\s\\S]*?(\\n[ \\t]*<!-- AUTO:${key}:END -->)`);
   if (!re.test(html)) throw new Error(`markers for ${key} not found in index.html`);
-  return html.replace(re, `$1${body.replace(/\n$/, "")}$2`);
+  return html.replace(re, (_, start, end) => start + body.replace(/\n$/, "") + end);
 }
 
 let html = await readFile(PAGE, "utf8");
