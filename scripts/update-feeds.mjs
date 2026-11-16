@@ -109,8 +109,36 @@ try {
   else console.warn(`videos: only ${videos.length} found, leaving block unchanged`);
 } catch (e) { console.warn(`videos: ${e.message}; leaving block unchanged`); }
 
+// Substack sometimes refuses cloud servers (HTTP 403) on /feed. Try the feed with a
+// browser user agent, then Substack's own archive API, and use the first that works.
+const BROWSER_UA = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0 Safari/537.36";
+async function getPosts() {
+  if (process.env.SUBSTACK_FEED_FILE) return parsePosts(await readFile(process.env.SUBSTACK_FEED_FILE, "utf8"));
+  const errors = [];
+  for (const ua of [UA, BROWSER_UA]) {
+    try {
+      const res = await fetch(SUBSTACK_FEED, { headers: { "user-agent": ua, accept: "application/rss+xml, application/xml, text/xml" } });
+      if (!res.ok) throw new Error(`feed HTTP ${res.status}`);
+      const posts = parsePosts(await res.text());
+      if (posts.length) return posts;
+      throw new Error("feed had no posts");
+    } catch (e) { errors.push(e.message); }
+  }
+  try {
+    const res = await fetch("https://sgcarney.substack.com/api/v1/archive?sort=new&limit=8", { headers: { "user-agent": BROWSER_UA, accept: "application/json" } });
+    if (!res.ok) throw new Error(`archive API HTTP ${res.status}`);
+    const list = await res.json();
+    const posts = list.filter((p) => p.canonical_url && p.title).map((p) => ({
+      link: p.canonical_url, title: p.title, sub: clip(p.subtitle || p.description || "", 90), date: new Date(p.post_date),
+    })).sort((a, b) => b.date - a.date);
+    if (posts.length) return posts;
+    throw new Error("archive API had no posts");
+  } catch (e) { errors.push(e.message); }
+  throw new Error(errors.join("; "));
+}
+
 try {
-  const posts = parsePosts(await getFeed(SUBSTACK_FEED, process.env.SUBSTACK_FEED_FILE));
+  const posts = await getPosts();
   if (posts.length) { html = swap(html, "POSTS", renderPosts(posts)); console.log(`posts: newest is "${posts[0].title}"`); }
   else console.warn("posts: none found, leaving block unchanged");
 } catch (e) { console.warn(`posts: ${e.message}; leaving block unchanged`); }
